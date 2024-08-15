@@ -318,7 +318,10 @@ def calcular_media():
     try:
         total = sum(transacao['valor'] for transacao in bd)
         media = total / len(bd)
-        print(f"Média das transações: R$ {media:.2f}")
+        relatorio = f"Média das transações: R$ {media:.2f}"
+        print(relatorio)
+        nome_relatorio = 'media_transacoes'
+        salvar_relatorio(nome_relatorio, relatorio)
         return media
     except Exception as e:
         print(f"Ocorreu um erro ao calcular a média das transações: {e}")
