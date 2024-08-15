@@ -341,11 +341,16 @@ def consultar_transacao_por_ID():
 
     transacao_solicitada = list((transacao for transacao in bd if transacao['UUID'] == opcao))
 
-    print(f"Transação:{transacao_solicitada[0]['UUID']}")
-    print(f"Valor:{transacao_solicitada[0]['valor']}")
-    print(f"Categoria:{transacao_solicitada[0]['categoria']}")
+    relatorio = (
+        f'Transação: {transacao_solicitada[0]["UUID"]}\n'
+        f'Valor: {transacao_solicitada[0]["valor"]}\n'
+        f'Categoria: {transacao_solicitada[0]["categoria"]}\n'
+    )
+    print(relatorio)
+    
+    nome_relatorio = f'transacao_{transacao_solicitada[0]["UUID"]}'
 
-
+    salvar_relatorio(nome_relatorio, relatorio)
     pass
 
 def cadastrar_transacao():
