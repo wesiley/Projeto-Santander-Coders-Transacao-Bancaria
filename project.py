@@ -254,7 +254,7 @@ def salvar_relatorio(nome_relatorio, conteudo):
         with open(caminho_relatorio, 'w', encoding='utf-8') as arquivo:
             arquivo.write(conteudo)
         
-        print(f'Relatório salvo com sucesso em {caminho_relatorio}')
+        print(f'Relatório salvo com sucesso em "{caminho_relatorio}"')
     except Exception as e:
         print(f'Erro ao salvar o relatório: {e}')
 
@@ -304,8 +304,14 @@ def mostrar_m5_transacoes(m):
         else:
             raise ValueError("Opção inválida para 'm'.")
 
+        # String relatório
+        relatorio = f'5 transações {m}:\n'
         for transacao in transacoes:
+            relatorio += f"ID: {transacao['UUID']}, Valor: R$ {transacao['valor']:.2f}, Categoria: {transacao['categoria']}\n"
             print(transacao)
+        
+        nome_relatorio = f'5_transações_{m}'
+        salvar_relatorio(nome_relatorio, relatorio)
 
     except Exception as e:
         print(f"Ocorreu um erro ao mostrar as transações: {e}")
