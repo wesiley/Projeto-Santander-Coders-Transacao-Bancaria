@@ -49998,5 +49998,10 @@
         "UUID": "a7dceb1d-99bc-44d4-b27d-8425c5cc71de",
         "valor": 769.8,
         "categoria": "alimentacao"
+    },
+    {
+        "UUID": "bfb91ff8-cdab-488d-83b1-4d1385e19b08",
+        "valor": 100.0,
+        "categoria": "investimentos"
     }
 ]

@@ -331,7 +331,23 @@ def cadastrar_transacao():
     Cadastra uma nova transação.
     \nObs:Para gerar um novo uuid, veja como é feito na função `criar_transacoes`.
     """
+    print("Cadastro de Novas Transações")
+    print("")
 
+    lista_categorias()
+
+    numero_categoria = input("Digite a número da categoria:")
+    categoria = selecao_categoria(numero_categoria)
+
+    transacao = {
+        "UUID": str(uuid.uuid4()),
+        "valor": float(input("Digite o valor:")),
+        "categoria": categoria
+    }
+    
+    bd.append(transacao)
+
+    salvar_json(bd, path2save="./data", filename='transactions.json')
     
     pass
 
