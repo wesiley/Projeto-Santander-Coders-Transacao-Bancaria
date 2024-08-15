@@ -251,9 +251,11 @@ def salvar_relatorio(nome_relatorio, conteudo):
     while True:
         print('\n')
         print("-" * 10)
-             
+        
+        # Pergunta se o usuário quer salvar ou não o relatório
         deseja_salvar = input("Deseja salvar o relatório? (y/[n]): ").strip().lower()
         
+        # Condições para o salvamento do relatório
         if deseja_salvar == 'y':
             try:
                 caminho_relatorio = f'{nome_relatorio}.txt'
