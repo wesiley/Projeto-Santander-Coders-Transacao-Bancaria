@@ -248,15 +248,30 @@ def salvar_relatorio(nome_relatorio, conteudo):
     Salvar o relatório gerado em .txt
     Aplicar esta função em todos os relatórios listados em `visualizar_relatorios`
     """
-    try:
-        caminho_relatorio = f'{nome_relatorio}.txt'
+    while True:
+        print('\n')
+        print("-" * 10)
+             
+        deseja_salvar = input("Deseja salvar o relatório? (y/[n]): ").strip().lower()
         
-        with open(caminho_relatorio, 'w', encoding='utf-8') as arquivo:
-            arquivo.write(conteudo)
-        
-        print(f'Relatório salvo com sucesso em "{caminho_relatorio}"')
-    except Exception as e:
-        print(f'Erro ao salvar o relatório: {e}')
+        if deseja_salvar == 'y':
+            try:
+                caminho_relatorio = f'{nome_relatorio}.txt'
+                
+                with open(caminho_relatorio, 'w', encoding='utf-8') as arquivo:
+                    arquivo.write(conteudo)
+                
+                print(f'Relatório salvo com sucesso em "{caminho_relatorio}"')
+                break
+            except Exception as e:
+                print(f'Erro ao salvar o relatório: {e}')
+                break
+        elif deseja_salvar == 'n':
+            print('Salvamento do relatório cancelado')
+            break
+        else:
+            print('Opção inválida. Digite "y" para salvar o relatório ou "n" para cancelar o salvamento.')
+
 
 def calcular_total_transacoes():
     """
