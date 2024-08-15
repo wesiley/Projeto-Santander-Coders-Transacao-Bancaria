@@ -260,9 +260,9 @@ def calcular_total_transacoes():
         categoria = input("Digite o número da categoria: ")
         escolhida = selecao_categoria(categoria)
         # TEM QUE ARRUMNAR AQUI PRA ELE SOMAR SÓ PRA CADA CATEGORIA
-     
+        # FILTRO DE CATEGORIA ARRUMADO - ALINE
         if escolhida != None:
-            total = sum(transacao['valor'] for transacao in bd)
+            total = sum(transacao['valor'] for transacao in bd if transacao['categoria'] == escolhida)
             print(f"Total das transações da categoria {escolhida}: R$ {total:.2f}")
         else:
             pass
