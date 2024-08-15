@@ -243,12 +243,20 @@ def visualizar_relatorios():
 
         input("Pressione Enter para continuar...")
 
-def salvar_relatorio():
+def salvar_relatorio(nome_relatorio, conteudo):
     """
     Salvar o relatório gerado em .txt
     Aplicar esta função em todos os relatórios listados em `visualizar_relatorios`
     """
-    pass
+    try:
+        caminho_relatorio = f'{nome_relatorio}.txt'
+        
+        with open(caminho_relatorio, 'w', encoding='utf-8') as arquivo:
+            arquivo.write(conteudo)
+        
+        print(f'Relatório salvo com sucesso em {caminho_relatorio}')
+    except Exception as e:
+        print(f'Erro ao salvar o relatório: {e}')
 
 def calcular_total_transacoes():
     """
@@ -263,7 +271,12 @@ def calcular_total_transacoes():
         # FILTRO DE CATEGORIA ARRUMADO - ALINE
         if escolhida != None:
             total = sum(transacao['valor'] for transacao in bd if transacao['categoria'] == escolhida)
-            print(f"Total das transações da categoria {escolhida}: R$ {total:.2f}")
+            relatorio = (f"Total das transações da categoria {escolhida}: R$ {total:.2f}")
+            print(relatorio)
+
+        # Salvando o relatório
+            nome_relatorio = f'total_transacoes_categoria_{escolhida}'
+            salvar_relatorio(nome_relatorio, relatorio)
         else:
             pass
     except Exception as e:
