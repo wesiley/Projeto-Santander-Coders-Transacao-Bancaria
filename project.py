@@ -383,7 +383,36 @@ def editar_transacao_por_ID():
     """
     Edita uma transação específica pelo seu UUID.
     """
-    pass
+    id = input("Digite o ID da operação que deseja alterar: ")
+    transacao_solicitada = list((transacao for transacao in bd if transacao['UUID'] == id))
+    
+    relatorio = (
+        f'Transação: {transacao_solicitada[0]["UUID"]}\n'
+        f'Valor: {transacao_solicitada[0]["valor"]}\n'
+        f'Categoria: {transacao_solicitada[0]["categoria"]}\n'
+    )
+    print(f"Este é a versão atual da transacao: \n{relatorio}")
+    
+    novo_valor = float(input("Digite o novo valor da operação: "))
+    lista_categorias()
+    escolha_categoria = input("Digite a nova categoria: ")
+    nova_categoria = selecao_categoria(escolha_categoria)
+    
+    
+    transacao_solicitada[0]["valor"] = novo_valor
+    
+    transacao_solicitada[0]["categoria"] = nova_categoria
+    
+    with open('./data/transactions.json', 'w') as file:
+        json.dump(bd, file, indent=4)
+        
+    relatorio2 = (
+        f'Transação: {transacao_solicitada[0]["UUID"]}\n'
+        f'Valor: {transacao_solicitada[0]["valor"]}\n'
+        f'Categoria: {transacao_solicitada[0]["categoria"]}\n'
+    )
+    print(f"Este é a versão editada da transação: \n{relatorio2}")
+    
 
 def excluir_transacao():
     """
