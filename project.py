@@ -315,6 +315,15 @@ def consultar_transacao_por_ID():
     """
     Consulta uma transação específica pelo seu UUID.
     """
+    opcao = input("Digite o ID da Transação: ")
+
+    transacao_solicitada = list((transacao for transacao in bd if transacao['UUID'] == opcao))
+
+    print(f"Transação:{transacao_solicitada[0]['UUID']}")
+    print(f"Valor:{transacao_solicitada[0]['valor']}")
+    print(f"Categoria:{transacao_solicitada[0]['categoria']}")
+
+
     pass
 
 def cadastrar_transacao():
@@ -322,6 +331,8 @@ def cadastrar_transacao():
     Cadastra uma nova transação.
     \nObs:Para gerar um novo uuid, veja como é feito na função `criar_transacoes`.
     """
+
+    
     pass
 
 
