@@ -120,6 +120,11 @@ def tela_inicial():
 # Funções Auxiliares:
 
 # Menu escolhendo a opçao 1:
+def digite_para_continuar():
+    # função que funciona como pausa no programa, fazendo o usuário interagir para continuar
+    input("Pressione Enter para continuar...")
+    os.system('cls' if os.name == 'nt' else 'clear')
+
 def menu_visualizar_relatorios():
         
         print("Opções de Relatórios:")
@@ -150,9 +155,7 @@ def lista_categorias():
 
 # Função para selecionar as categorias
 def selecao_categoria(num):
-    
     try:
-
         if num == "1":
             categoria = "alimentacao"
             return categoria
@@ -175,13 +178,33 @@ def selecao_categoria(num):
             categoria = "viagens"
             return categoria
         elif num == "0":
-            print("Voltando ao menu anterior...")   
+            print("Voltando ao menu anterior...") 
+            categoria = 'retorno' 
+            return categoria
         else:
             print("Opção inválida, tente novamente.")
     except Exception as e:
         print(f"Ocorreu um erro: {e}")
-        input("Pressione Enter para continuar...")
-        
+        digite_para_continuar()
+
+    #categorias = ['alimentação', 'casa', 'investimentos', 'lazer', 'saúde', 'transferências', 'viagens']
+    # while True:
+    #     #num = input('Digite o número da categoria1234: ')
+    #     try:
+    #         num = int(num)
+    #         for i, categoria in enumerate(categorias):
+    #             if num >= 8 or num < 0:
+    #                 break
+    #             elif num == i + 1:
+    #                 return categoria
+    #         if num == 0:
+    #             print('Voltando ao menu anterior...')
+    #             continue
+    #         else:
+    #             print('\nOpção inválida, tente novamente ou\ndigite 0 (zero) para voltar ao menur anterior.\n')
+    #     except ValueError:
+    #         print('\nOpção inválida, tente novamente ou\ndigite 0 (zero) para voltar ao menur anterior.\n')
+    #         break
 
 # Função principal        
 def run():
@@ -207,11 +230,11 @@ def run():
             else:
                 print("Opção inválida, tente novamente.")
 
-            input("Pressione Enter para continuar...")
+            digite_para_continuar()
 
         except Exception as e:
             print(f"Ocorreu um erro: {e}")
-            input("Pressione Enter para continuar...")
+            digite_para_continuar()
 
 
 def visualizar_relatorios():
@@ -240,8 +263,8 @@ def visualizar_relatorios():
             break
         else:
             print("Opção inválida, tente novamente.")
+            digite_para_continuar()
 
-        input("Pressione Enter para continuar...")
 
 def salvar_relatorio(nome_relatorio, conteudo):
     """
@@ -265,9 +288,11 @@ def salvar_relatorio(nome_relatorio, conteudo):
                 
                 print(f'Relatório salvo com sucesso em "{caminho_relatorio}"')
                 break
+
             except Exception as e:
                 print(f'Erro ao salvar o relatório: {e}')
                 break
+            
         elif deseja_salvar == 'n':
             print('Salvamento do relatório cancelado')
             break
@@ -374,26 +399,60 @@ def cadastrar_transacao():
     """
     Cadastra uma nova transação.
     \nObs:Para gerar um novo uuid, veja como é feito na função `criar_transacoes`.
-    """
-    print("Cadastro de Novas Transações")
-    print("")
+    """    
+    while True:
+        print("Cadastro de Novas Transações")
+        print("")
 
-    lista_categorias()
+        # listar as categorias para cadastro
+        lista_categorias()
+        # seleção da categoria escolhida pelo usuário
+        numero_categoria = input("Digite a número da categoria:")
+        categoria = selecao_categoria(numero_categoria)
 
-    numero_categoria = input("Digite a número da categoria:")
-    categoria = selecao_categoria(numero_categoria)
+        # condição quando numero_categoria digitado foi "0"
+        if categoria == 'retorno':
+            break
 
-    transacao = {
-        "UUID": str(uuid.uuid4()),
-        "valor": float(input("Digite o valor:")),
-        "categoria": categoria
-    }
-    
-    bd.append(transacao)
+        # Salvando a transação e o valor no banco de dados
+        if categoria is not None:
+            print('\nDigite "0" para retornar ao menu\n')
+            print(f'Foi selecionada a categoria {categoria}')
 
-    salvar_json(bd, path2save="./data", filename='transactions.json')
-    
-    pass
+            # Tratamento do valor a ser salvo
+            valor_input = input("Digite o valor: R$")
+            try:
+                valor_transacao = float(valor_input)
+            except ValueError:
+                print('Valor inválido! Digite novamente.')
+                digite_para_continuar()
+                continue
+            
+            # opção de retornar ao menu anterior
+            if valor_transacao == 0:
+                digite_para_continuar()
+                continue
+            
+            # quando um valor válido é digitado
+            transacao = {
+                "UUID": str(uuid.uuid4()),
+                "valor": valor_transacao,
+                "categoria": categoria
+            }
+
+            # Salvando a transação no banco de dados
+            bd.append(transacao)
+
+            salvar_json(bd, path2save="./data", filename='transactions.json')
+            
+            # Dados da transação realizada para contultas futuras
+            print('\nDados da transação realizada: ')
+            for chave, valor in transacao.items():
+                print(f'{chave}: {valor}')
+            break
+        else:
+            digite_para_continuar()  
+            pass
 
 
 def editar_transacao_por_ID():
@@ -432,9 +491,27 @@ def editar_transacao_por_ID():
     
 
 def excluir_transacao():
+
     """
     Exclui uma transação específica pelo UUID.
     """
+    transacao_a_excluir = input("Digite o UUID da transação que deseja excluir: ").strip()
+
+    transacoes = load_bd()
+
+    transacao_encontrada = False
+    for transacao in transacoes:
+        if transacao['UUID'] == transacao_a_excluir:
+            transacoes.remove(transacao)
+            transacao_encontrada = True
+            break
+
+    if transacao_encontrada:
+        salvar_json(transacoes, './data', 'transactions.json')
+        print(f"A transação com UUID {transacao_a_excluir} foi excluída com sucesso.")
+    else:
+        print("UUID não encontrado. Por favor, verifique e tente novamente.")
+    
     pass
 
 # -----------------------
