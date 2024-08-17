@@ -121,7 +121,7 @@ def tela_inicial():
 
 # Menu escolhendo a opçao 1:
 def digite_para_continuar():
-    # função que funciona como pausa no programa, fazendo o usuário interagir para continuar
+    # função que funciona como pausa no programa e limpando o console
     input("Pressione Enter para continuar...")
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -306,23 +306,31 @@ def calcular_total_transacoes():
     Utilize essa mesma função para o caso `por categoria`
     """
     try:
-        lista_categorias()
-        categoria = input("Digite o número da categoria: ")
-        escolhida = selecao_categoria(categoria)
-        # TEM QUE ARRUMNAR AQUI PRA ELE SOMAR SÓ PRA CADA CATEGORIA
-        # FILTRO DE CATEGORIA ARRUMADO - ALINE
-        if escolhida != None:
-            total = sum(transacao['valor'] for transacao in bd if transacao['categoria'] == escolhida)
-            relatorio = (f"Total das transações da categoria {escolhida}: R$ {total:.2f}")
-            print(relatorio)
+        while True:
+            lista_categorias()
 
-        # Salvando o relatório
-            nome_relatorio = f'total_transacoes_categoria_{escolhida}'
-            salvar_relatorio(nome_relatorio, relatorio)
-        else:
-            pass
+            categoria = input("Digite o número da categoria: ")
+            escolhida = selecao_categoria(categoria)
+
+            # condição quando numero_categoria digitado foi "0"
+            if escolhida == 'retorno':
+                digite_para_continuar()
+                break
+            # TEM QUE ARRUMNAR AQUI PRA ELE SOMAR SÓ PRA CADA CATEGORIA
+            # FILTRO DE CATEGORIA ARRUMADO - ALINE
+            if escolhida != None:
+                total = sum(transacao['valor'] for transacao in bd if transacao['categoria'] == escolhida)
+                relatorio = (f"Total das transações da categoria {escolhida}: R$ {total:.2f}")
+                print(relatorio)
+
+            # Salvando o relatório
+                nome_relatorio = f'total_transacoes_categoria_{escolhida}'
+                salvar_relatorio(nome_relatorio, relatorio)
+            else:
+                digite_para_continuar()
+            
     except Exception as e:
-        print(f"Ocorreu um erro ao calcular o total das transações: {e}")
+         print(f"Ocorreu um erro ao calcular o total das transações: {e}")
 
 def mostrar_m5_transacoes(m):
     """
