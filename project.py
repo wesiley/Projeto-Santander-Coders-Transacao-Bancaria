@@ -471,8 +471,10 @@ def editar_transacao_por_ID():
         if id == "0" or id == "zero":
             print("Voltando para o menu inicial")
             break  
+
         #Verifica o id na base de dados  
         transacao_solicitada = list((transacao for transacao in bd if transacao['UUID'] == id))
+
         #Mostra para o usuário como está a versão atual da transação    
         relatorio = (
             f'Transação: {transacao_solicitada[0]["UUID"]}\n'
@@ -480,6 +482,7 @@ def editar_transacao_por_ID():
             f'Categoria: {transacao_solicitada[0]["categoria"]}\n'
         )
         print(f"Este é a versão atual da transacao: \n{relatorio}")
+
         #Recebe os novos valores e categorias    
         novo_valor = float(input("Digite o novo valor da operação ou digite 0 para sair: "))
         if novo_valor < 0:
@@ -490,13 +493,16 @@ def editar_transacao_por_ID():
         lista_categorias()
         escolha_categoria = input("Digite a nova categoria: ")
         nova_categoria = selecao_categoria(escolha_categoria)
+
         #Atribui os novos valores        
         transacao_solicitada[0]["valor"] = novo_valor
             
         transacao_solicitada[0]["categoria"] = nova_categoria
+
         #Salva as alterações no arquivo transactions.json    
         with open('./data/transactions.json', 'w') as file:
                 json.dump(bd, file, indent=4)
+
         #Mostra para o usuário a versão atualizada dos dados        
         relatorio2 = (
             f'Transação: {transacao_solicitada[0]["UUID"]}\n'
@@ -516,6 +522,7 @@ def excluir_transacao():
     
     if transacao_a_excluir == "0":
         raise ValueError("Retornando para o Menu principal")
+    
     # Exclui os dados do id e salva a alterações no arquivo transactions.json
     transacao_encontrada = False
     for transacao in bd:
