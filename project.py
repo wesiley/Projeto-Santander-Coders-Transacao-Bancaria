@@ -119,12 +119,12 @@ def tela_inicial():
 
 # Funções Auxiliares:
 
-# Menu escolhendo a opçao 1:
+ # Função que pausa o programa e limpando o console
 def digite_para_continuar():
-    # função que funciona como pausa no programa e limpando o console
     input("Pressione Enter para continuar...")
     os.system('cls' if os.name == 'nt' else 'clear')
 
+# Menu escolhendo a opçao 1:
 def menu_visualizar_relatorios():
         
         print("Opções de Relatórios:")
@@ -148,7 +148,6 @@ def lista_categorias():
         print("5. Saúde")
         print("6. Transferências")
         print("7. Viagens")
-       #print("8. Outros")
         print("-" * 10)
         print("0. Voltar ao menu inicial")
         print('\n')
@@ -232,6 +231,9 @@ def run():
 
             digite_para_continuar()
 
+        except IndexError:
+            print("Ocorreu um erro, verifique se digitou o ID correto")
+            digite_para_continuar()
         except Exception as e:
             print(f"Ocorreu um erro: {e}")
             digite_para_continuar()
@@ -288,9 +290,18 @@ def salvar_relatorio(nome_relatorio, conteudo):
                 
                 print(f'Relatório salvo com sucesso em "{caminho_relatorio}"')
                 break
-
+            
+            except FileNotFoundError:
+                print('Erro: O diretório especificado não foi encontrado.')
+                break
+            except PermissionError:
+                print('Erro: Permissão negada para salvar o relatório no diretório especificado.')
+                break
+            except IOError as e:
+                print(f'Erro de I/O ao salvar o relatório: {e}') # Erro de acesso ao sistema, erro de disco, etc
+                break
             except Exception as e:
-                print(f'Erro ao salvar o relatório: {e}')
+                print(f'Erro inesperado ao salvar o relatório: {e}')
                 break
             
         elif deseja_salvar == 'n':
@@ -305,32 +316,29 @@ def calcular_total_transacoes():
     Calcula o valor total de transações da conta.
     Utilize essa mesma função para o caso `por categoria`
     """
-    try:
-        while True:
-            lista_categorias()
 
-            categoria = input("Digite o número da categoria: ")
-            escolhida = selecao_categoria(categoria)
+    while True:
+        lista_categorias()
 
-            # condição quando numero_categoria digitado foi "0"
-            if escolhida == 'retorno':
-                digite_para_continuar()
-                break
-            # TEM QUE ARRUMNAR AQUI PRA ELE SOMAR SÓ PRA CADA CATEGORIA
-            # FILTRO DE CATEGORIA ARRUMADO - ALINE
-            if escolhida != None:
-                total = sum(transacao['valor'] for transacao in bd if transacao['categoria'] == escolhida)
-                relatorio = (f"Total das transações da categoria {escolhida}: R$ {total:.2f}")
-                print(relatorio)
+        categoria = input("Digite o número da categoria: ")
+        escolhida = selecao_categoria(categoria)
 
-            # Salvando o relatório
-                nome_relatorio = f'total_transacoes_categoria_{escolhida}'
-                salvar_relatorio(nome_relatorio, relatorio)
-            else:
-                digite_para_continuar()
+        # condição quando numero_categoria digitado foi "0"
+        if escolhida == 'retorno':
+            digite_para_continuar()
+            break
+        
+        if escolhida != None:
+            total = sum(transacao['valor'] for transacao in bd if transacao['categoria'] == escolhida)
+            relatorio = (f"Total das transações da categoria {escolhida}: R$ {total:.2f}")
+            print(relatorio)
+
+        # Salvando o relatório
+            nome_relatorio = f'total_transacoes_categoria_{escolhida}'
+            salvar_relatorio(nome_relatorio, relatorio)
+        else:
+            digite_para_continuar()
             
-    except Exception as e:
-         print(f"Ocorreu um erro ao calcular o total das transações: {e}")
 
 def mostrar_m5_transacoes(m):
     """
@@ -467,60 +475,72 @@ def editar_transacao_por_ID():
     """
     Edita uma transação específica pelo seu UUID.
     """
-    id = input("Digite o ID da operação que deseja alterar: ")
-    transacao_solicitada = list((transacao for transacao in bd if transacao['UUID'] == id))
-    
-    relatorio = (
-        f'Transação: {transacao_solicitada[0]["UUID"]}\n'
-        f'Valor: {transacao_solicitada[0]["valor"]}\n'
-        f'Categoria: {transacao_solicitada[0]["categoria"]}\n'
-    )
-    print(f"Este é a versão atual da transacao: \n{relatorio}")
-    
-    novo_valor = float(input("Digite o novo valor da operação: "))
-    lista_categorias()
-    escolha_categoria = input("Digite a nova categoria: ")
-    nova_categoria = selecao_categoria(escolha_categoria)
-    
-    
-    transacao_solicitada[0]["valor"] = novo_valor
-    
-    transacao_solicitada[0]["categoria"] = nova_categoria
-    
-    with open('./data/transactions.json', 'w') as file:
-        json.dump(bd, file, indent=4)
-        
-    relatorio2 = (
-        f'Transação: {transacao_solicitada[0]["UUID"]}\n'
-        f'Valor: {transacao_solicitada[0]["valor"]}\n'
-        f'Categoria: {transacao_solicitada[0]["categoria"]}\n'
-    )
-    print(f"Este é a versão editada da transação: \n{relatorio2}")
+    while True:
+        #Pede ao usuário para inserir o id da transação e verifica se o usuário quer voltar para o menu iniciar
+        id = input("Digite o ID da operação que deseja alterar ou 0 se quiser voltar ao menu: ")
+        if id == "0" or id == "zero":
+            print("Voltando para o menu inicial")
+            break  
+        #Verifica o id na base de dados  
+        transacao_solicitada = list((transacao for transacao in bd if transacao['UUID'] == id))
+        #Mostra para o usuário como está a versão atual da transação    
+        relatorio = (
+            f'Transação: {transacao_solicitada[0]["UUID"]}\n'
+            f'Valor: {transacao_solicitada[0]["valor"]}\n'
+            f'Categoria: {transacao_solicitada[0]["categoria"]}\n'
+        )
+        print(f"Este é a versão atual da transacao: \n{relatorio}")
+        #Recebe os novos valores e categorias    
+        novo_valor = float(input("Digite o novo valor da operação ou digite 0 para sair: "))
+        if novo_valor < 0:
+            raise ValueError("O número não pode ser negativo.")
+        if novo_valor == 0 :
+            print("Voltando para o menu inicial")
+            break  
+        lista_categorias()
+        escolha_categoria = input("Digite a nova categoria: ")
+        nova_categoria = selecao_categoria(escolha_categoria)
+        #Atribui os novos valores        
+        transacao_solicitada[0]["valor"] = novo_valor
+            
+        transacao_solicitada[0]["categoria"] = nova_categoria
+        #Salva as alterações no arquivo transactions.json    
+        with open('./data/transactions.json', 'w') as file:
+                json.dump(bd, file, indent=4)
+        #Mostra para o usuário a versão atualizada dos dados        
+        relatorio2 = (
+            f'Transação: {transacao_solicitada[0]["UUID"]}\n'
+            f'Valor: {transacao_solicitada[0]["valor"]}\n'
+            f'Categoria: {transacao_solicitada[0]["categoria"]}\n'
+        )
+        print(f"Este é a versão editada da transação:  \n{relatorio2}")
+        break
     
 
 def excluir_transacao():
-
     """
     Exclui uma transação específica pelo UUID.
     """
-    transacao_a_excluir = input("Digite o UUID da transação que deseja excluir: ").strip()
-
-    transacoes = load_bd()
-
+    # Recebe o ID que o usuário quer excluir ou retorna o mesmo para a tela inicial
+    transacao_a_excluir = input("Digite o UUID da transação que deseja excluir ou digite 0 para voltar para o menu principal: ").strip()
+    
+    if transacao_a_excluir == "0":
+        raise ValueError("Retornando para o Menu principal")
+    # Exclui os dados do id e salva a alterações no arquivo transactions.json
     transacao_encontrada = False
-    for transacao in transacoes:
+    for transacao in bd:
         if transacao['UUID'] == transacao_a_excluir:
-            transacoes.remove(transacao)
+            bd.remove(transacao)
             transacao_encontrada = True
+            with open('./data/transactions.json', 'w') as file:
+                json.dump(bd, file, indent=4)
             break
-
+    
     if transacao_encontrada:
-        salvar_json(transacoes, './data', 'transactions.json')
         print(f"A transação com UUID {transacao_a_excluir} foi excluída com sucesso.")
     else:
         print("UUID não encontrado. Por favor, verifique e tente novamente.")
-    
-    pass
+
 
 # -----------------------
 # MAIN SCRIPT
