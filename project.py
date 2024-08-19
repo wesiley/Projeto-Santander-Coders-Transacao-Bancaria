@@ -119,7 +119,7 @@ def tela_inicial():
 
 # Funções Auxiliares:
 
- # Função que pausa o programa e limpando o console
+# Função que pausa o programa e limpando o console
 def digite_para_continuar():
     input("Pressione Enter para continuar...")
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -148,7 +148,22 @@ def lista_categorias():
         print("5. Saúde")
         print("6. Transferências")
         print("7. Viagens")
+        print("8. Todas")
         print("-" * 10)
+        print("0. Voltar ao menu inicial")
+        print('\n')
+
+# Menu de categorias para o cadastro
+def lista_categorias_cadastro():
+
+        print("1. Alimentação")
+        print("2. Casa")
+        print("3. Investimentos")
+        print("4. Lazer")
+        print("5. Saúde")
+        print("6. Transferências")
+        print("7. Viagens")
+        print("-" * 20)
         print("0. Voltar ao menu inicial")
         print('\n')
 
