@@ -371,11 +371,14 @@ def calcular_media():
     """
     try:
         total = sum(transacao['valor'] for transacao in bd)
+
         media = total / len(bd)
         relatorio = f"Média das transações: R$ {media:.2f}"
         print(relatorio)
+
         nome_relatorio = 'media_transacoes'
         salvar_relatorio(nome_relatorio, relatorio)
+
         return media
     except Exception as e:
         print(f"Ocorreu um erro ao calcular a média das transações: {e}")
@@ -411,7 +414,7 @@ def cadastrar_transacao():
         print("")
 
         # listar as categorias para cadastro
-        lista_categorias()
+        lista_categorias_cadastro()
         # seleção da categoria escolhida pelo usuário
         numero_categoria = input("Digite a número da categoria:")
         categoria = selecao_categoria(numero_categoria)
@@ -490,7 +493,7 @@ def editar_transacao_por_ID():
         if novo_valor == 0 :
             print("Voltando para o menu inicial")
             break  
-        lista_categorias()
+        lista_categorias_cadastro()
         escolha_categoria = input("Digite a nova categoria: ")
         nova_categoria = selecao_categoria(escolha_categoria)
 
