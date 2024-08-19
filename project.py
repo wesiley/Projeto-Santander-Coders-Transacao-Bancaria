@@ -180,17 +180,15 @@ def selecao_categoria(num):
         "8": "todas"
     }
 
-    try:
-        if num in categorias:
-            return categorias[num]
-        elif num == "0":
-            print("Voltando ao menu anterior...")
-            return None
-        else:
-            print("Opção inválida, tente novamente.")
-    except Exception as e:
-        print(f"Ocorreu um erro: {e}")
-        digite_para_continuar()
+    
+    if num in categorias:
+        return categorias[num]
+    elif num == "0":
+        print("Voltando ao menu anterior...")
+        return None
+    else:
+        print("Opção inválida, tente novamente.")
+
 
 # Função principal        
 def run():
