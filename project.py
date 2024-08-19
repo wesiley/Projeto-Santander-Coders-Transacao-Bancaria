@@ -177,17 +177,16 @@ def selecao_categoria(num):
         "5": "saude",
         "6": "transferencias",
         "7": "viagens",
-        "8": "todas"
+        "8": "todas",
+        "0": 'retorno'
     }
 
     
     if num in categorias:
         return categorias[num]
-    elif num == "0":
-        print("Voltando ao menu anterior...")
-        return None
     else:
         print("Opção inválida, tente novamente.")
+        return None
 
 
 # Função principal        
@@ -302,56 +301,33 @@ def calcular_total_transacoes():
     Utilize essa mesma função para o caso `por categoria`
     """
     while True:
-        #Escolha por soma total ou som por categoria
-        print("1. Exibir soma total de transações")
-        print("2. Exibir a soma total por categoria")
-        print("-" * 10)
-        print("0. Voltar ao menu inicial")
-
-        opcao_soma = input('Escolha uma opção: ')
-
-        # Cálculo da soma total de todas as categorias  
-        if opcao_soma == '1': 
-            total = sum(transacao['valor'] for transacao in bd)
-            relatorio = (f"Total de transações total: R$ {total:.2f}")
-            print(relatorio)
-
-            # Salvando o relatório
-            nome_relatorio = f'soma_total_todas_transacoes'
-            salvar_relatorio(nome_relatorio, relatorio)
+        lista_categorias()
+        
+        categoria = input("Digite o número da categoria: ")
+        escolhida = selecao_categoria(categoria)
+        
+        # condição quando numero_categoria digitado foi "0"
+        if escolhida == 'retorno':
+            print('Retornando ao menu anterior...')
             digite_para_continuar()
             break
 
-        # Cálculo da soma total por categoria
-        elif opcao_soma == '2': 
-            lista_categorias()
-
-            categoria = input("Digite o número da categoria: ")
-            escolhida = selecao_categoria(categoria)
-
-            # condição quando numero_categoria digitado foi "0"
-            if escolhida == 'retorno':
-                digite_para_continuar()
-                break
-
-            if escolhida != None:
+        if escolhida is not None:
+            if escolhida == "todas":
+                total = sum(transacao['valor'] for transacao in bd)
+                relatorio = (f"Total de transações total: R$ {total:.2f}")
+                print(relatorio)
+            else:
                 total = sum(transacao['valor'] for transacao in bd if transacao['categoria'] == escolhida)
                 relatorio = (f"Total das transações da categoria {escolhida}: R$ {total:.2f}")
                 print(relatorio)
 
-                # Salvando o relatório
-                nome_relatorio = f'total_transacoes_categoria_{escolhida}'
-                salvar_relatorio(nome_relatorio, relatorio)
-                digite_para_continuar()
-            else:
-                digite_para_continuar()
-
-        elif opcao_soma == '0':
-            digite_para_continuar()
+        # Salvando o relatório
+            nome_relatorio = f'total_transacoes_categoria_{escolhida}'
+            salvar_relatorio(nome_relatorio, relatorio)
             break
         else:
             digite_para_continuar()
-            continue
                     
 
 def mostrar_m5_transacoes(m):
