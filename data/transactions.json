@@ -50003,5 +50003,15 @@
         "UUID": "bfb91ff8-cdab-488d-83b1-4d1385e19b08",
         "valor": 100.0,
         "categoria": "investimentos"
+    },
+    {
+        "UUID": "74ead809-010c-44b3-9962-66af3bc4be97",
+        "valor": 5.5,
+        "categoria": "investimentos"
+    },
+    {
+        "UUID": "7e9c5d26-3398-405e-99e3-2d533340e92e",
+        "valor": 400.0,
+        "categoria": "casa"
     }
 ]
