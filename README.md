@@ -1,6 +1,6 @@
 # Projeto Santander Coders para transação bancária
 
-<img src="https://images.pexels.com/photos/6694543/pexels-photo-6694543.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="salary">
+<img src="https://images.pexels.com/photos/259200/pexels-photo-259200.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1">
 
 ## Projeto da disciplina de Lógica de programacao II - Ada Tech - Santander Coders_
 
